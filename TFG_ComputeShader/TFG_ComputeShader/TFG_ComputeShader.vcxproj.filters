@@ -1,0 +1,137 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Archivos de origen">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Archivos de encabezado">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Archivos de recursos">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Archivos de recursos\Render">
+      <UniqueIdentifier>{ae7e0c1f-6632-4674-8deb-a6ddd833ef21}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de recursos\Render\Mesh">
+      <UniqueIdentifier>{f29a672b-4e16-489e-a077-2d30c0323dc6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Archivos de recursos\LSystem">
+      <UniqueIdentifier>{8637760e-7039-499d-8668-a02e612890f9}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp">
+      <Filter>Archivos de recursos</Filter>
+    </ClCompile>
+    <ClCompile Include="Classes\glad.c">
+      <Filter>Archivos de recursos</Filter>
+    </ClCompile>
+    <ClCompile Include="Classes\LSystem\Dictionary.cpp">
+      <Filter>Archivos de recursos\LSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="Classes\LSystem\LSystem.cpp">
+      <Filter>Archivos de recursos\LSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="Classes\LSystem\StringTree.cpp">
+      <Filter>Archivos de recursos\LSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="Classes\Render\ComputeShader.cpp">
+      <Filter>Archivos de recursos\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="Classes\Render\LSystemRender.cpp">
+      <Filter>Archivos de recursos\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="Classes\Render\modelLoader.cpp">
+      <Filter>Archivos de recursos\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="Classes\Render\Renderizer.cpp">
+      <Filter>Archivos de recursos\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="Classes\Render\renderSystem.cpp">
+      <Filter>Archivos de recursos\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="Classes\Render\ShaderCompiler.cpp">
+      <Filter>Archivos de recursos\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="Classes\Render\stb_image.cpp">
+      <Filter>Archivos de recursos\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="Classes\Render\TreeRenderer.cpp">
+      <Filter>Archivos de recursos\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="Classes\Render\Meshes\Cube.cpp">
+      <Filter>Archivos de recursos\Render\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="Classes\Render\Meshes\Mesh.cpp">
+      <Filter>Archivos de recursos\Render\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="Classes\Render\Meshes\model.cpp">
+      <Filter>Archivos de recursos\Render\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="Classes\Render\Meshes\Triangle.cpp">
+      <Filter>Archivos de recursos\Render\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="Classes\LSystem\Config.h">
+      <Filter>Archivos de recursos\LSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="Classes\LSystem\LSystemMath.cpp">
+      <Filter>Archivos de recursos\LSystem</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Classes\LSystem\Dictionary.h">
+      <Filter>Archivos de recursos\LSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="Classes\LSystem\LSystem.h">
+      <Filter>Archivos de recursos\LSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="Classes\LSystem\StringTree.h">
+      <Filter>Archivos de recursos\LSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="Classes\Render\ComputeShader.h">
+      <Filter>Archivos de recursos\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Classes\Render\modelLoader.h">
+      <Filter>Archivos de recursos\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Classes\Render\Renderizer.h">
+      <Filter>Archivos de recursos\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Classes\Render\renderSystem.h">
+      <Filter>Archivos de recursos\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Classes\Render\ShaderCompiler.h">
+      <Filter>Archivos de recursos\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Classes\Render\stb_image.h">
+      <Filter>Archivos de recursos\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Classes\Render\TreeRenderer.h">
+      <Filter>Archivos de recursos\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Classes\Render\Meshes\Cube.h">
+      <Filter>Archivos de recursos\Render\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="Classes\Render\Meshes\Mesh.h">
+      <Filter>Archivos de recursos\Render\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="Classes\Render\Meshes\model.h">
+      <Filter>Archivos de recursos\Render\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="Classes\Render\Meshes\Triangle.h">
+      <Filter>Archivos de recursos\Render\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="Classes\LSystem\LSystemMath.h">
+      <Filter>Archivos de recursos\LSystem</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="Information.txt">
+      <Filter>Archivos de recursos</Filter>
+    </Text>
+  </ItemGroup>
+</Project>
