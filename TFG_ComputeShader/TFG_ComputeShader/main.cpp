@@ -49,14 +49,14 @@
 	This program has 3 phases: 
 	
 	- Data input: Which is mostly done by txt file located at the same directory as the executable. This phase will load: 
-		· L-System dictionary and rules. (rules.txt / simbols.txt) 
-		· L-System axioms for every Tree. (axioms.txt). 
-		· Load models to be renderized @see Mesh.h for more information. 
-		· Load Shaders (compute, vertex and fragment9. 
+		Â· L-System dictionary and rules. (rules.txt / simbols.txt) 
+		Â· L-System axioms for every Tree. (axioms.txt). 
+		Â· Load models to be renderized @see Mesh.h for more information. 
+		Â· Load Shaders (compute, vertex and fragment9. 
 	
 	
 	- L-System Pre-Process: This phase read the axiom and process the generation in a  specifid buffer format optimized for GPU. This process uses the CPU (Still looking how calculate on GPU): 
-		· For this buffer format we have to consider a couple of things. 
+		Â· For this buffer format we have to consider a couple of things. 
 			# Every time a branch splits, both trunks will form a new branch. In other words, a branch is valid until it splits, then 2 new branch are created.
 			# Every branch is formed by a group of meshes, in this case, cubes. Usuall called chunks. 
 			# Buffer have to be imagine as an Array, where each row is a branch. Sometimes all the row will be filled with data, other times, only some spaces will. 
@@ -64,10 +64,10 @@
 
 	- GPU L-System Process: This phase take all the L-System algebra and transform to Matrix corresponding to tree hierachy. And allowing multiple tree calculations despite of the data is stored 
 		in the same buffer. 
-			· This phase is made of 2 compue shaders: 
+			Â· This phase is made of 2 compue shaders: 
 				# First of all transforms all the L-System algebra to Matrix. And calculates the trasnform being relative to it's branch. (Branch space). 
 				# Second Determine's the branch owner (Which tree has that branch) and calculates all the chunks Transform to Tree-Space. 
-			· Each compute shader unit process a branch, despite of, which tree owns that branch. 
+			Â· Each compute shader unit process a branch, despite of, which tree owns that branch. 
 
 	The final result is a buffer with a lot of Transforms in Tree-Space with the root at (0,0,0) (Yes I know, If All tree's have the root at the same place, it will be a mess). 
 	Vertex Shader will be the one who calculates each transform to World Space, giving each tree a Root Transform in worldSpace coordinates. 
@@ -119,7 +119,7 @@ int main() {
 
 	Dictionary dic;
 	ls.GenerateMatrixOperationBuffer(buffer_dic, dic, false);//Fill the buffer whith the corresponding matrix
-	string path = "ComputeShaderTest.glsl";
+	string path = "BranchTransformShader.glsl";
 
 	int start = 0;
 	int end = indices[numTree - 1];
