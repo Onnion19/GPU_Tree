@@ -133,35 +133,37 @@ Mesh model::processMesh(aiMesh * mesh, const aiScene * scene) {
 	
 		
 
-	normalizeVertexAxis(vertices,min_x,min_y,min_z,normFactor,true);
+	normalizeVertexAxis(vertices,min_x,min_y,min_z,normFactor, max_x, max_y, max_z,true);
 
 	return Mesh(vertices, indices, textures);
 }
 
 
-void model::normalizeVertexAxis(vector<Vertex> &v, float minX, float minY, float minZ, float normFactor, bool debug)
+void model::normalizeVertexAxis(vector<Vertex> &v, float minX, float minY, float minZ, float normFactor,float max_x,float max_y,float max_z ,bool debug)
 {
 	if (debug)
 		cerr << "NORMALITZACIÓ DE VERTEXS:" << endl;
+
+	glm::vec3 Centre((max_x - minX)/(2*normFactor) , (max_y - minY )/ (2 * normFactor), (max_z - minZ)/ (2 * normFactor)); //Calculate the center of the normalized model 
+
 	for (int i = 0; i < v.size(); i++)
 	{
-		//Normalitzem l'objecte entre 0 - 1
+		// Normalize between 0 - 1
 		v[i]._posicio.x = ((v[i]._posicio.x - minX) / normFactor) ;
 		v[i]._posicio.y = (v[i]._posicio.y - minY) / normFactor;
 		v[i]._posicio.z = (v[i]._posicio.z - minZ) / normFactor;
 
-		//Pasem l'objecte a -0.5 i 0.5 per tenir el centre al 0
-		v[i]._posicio.x -= 0.5;
-		v[i]._posicio.y -= 0.5;
-		v[i]._posicio.z -= 0.5;
-
+		//Translate the model to have the pivot point in the real center 
+		v[i]._posicio.x -= Centre.x;
+		v[i]._posicio.y -= Centre.y;
+		v[i]._posicio.z -= Centre.z;
+ 
 		if (debug)
 			cerr << "\tVertex " << i << ": ( " << v[i]._posicio.x << " , " << v[i]._posicio.y << " , " << v[i]._posicio.z << " )" << endl;
 		
+		
 	}
 
-	if (debug)
-		cerr << "FI NORMALITZACIO DE VERTEXS" << endl;
 }
 
 vector<Texture> model::loadMaterialTextures(aiMaterial *mat, aiTextureType type, string typeName) {

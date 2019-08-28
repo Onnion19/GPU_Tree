@@ -39,11 +39,10 @@ struct Texture {
 	aiString path;
 };
 
-
+//This class was created following learnopengl tutorials. All documentation can be found at: https://learnopengl.com/Model-Loading/Mesh
 class Mesh {
 	
 public: 
-	
 	Mesh(const Mesh &m);
 	Mesh(vector<Vertex> vertex, vector<unsigned int> indices, vector<Texture> textures); 
 	//Not use LoadMesh. 

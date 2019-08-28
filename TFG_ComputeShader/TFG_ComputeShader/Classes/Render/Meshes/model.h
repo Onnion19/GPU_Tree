@@ -38,7 +38,7 @@ private:
 	string directory; 
 	void ProcessNodeStructure(aiNode *node, const aiScene * scene);
 	Mesh processMesh(aiMesh * mesh, const aiScene * scene);
-	void normalizeVertexAxis(vector<Vertex> &v, float minX,float minY,float minZ, float normFactor, bool debug = false);
+	void normalizeVertexAxis(vector<Vertex> &v, float minX, float minY, float minZ, float normFactor, float,float,float, bool debug = false);
 
 	vector<Texture>loadMaterialTextures(aiMaterial *mat, aiTextureType type, string typeName);
 
