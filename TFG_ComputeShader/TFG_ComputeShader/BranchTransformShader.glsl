@@ -15,6 +15,8 @@ layout(binding=2) buffer outputBuffer {
     mat4 outs[];
 };
  
+ 
+ //This algorythm is the Tortois Algorithm applied on GPU with parallelism, Each execution is a branch.
 void main()
 {
 	const uint MAX_TRONCS = 16;
@@ -29,9 +31,9 @@ void main()
 	uint troncs = 1; 
 	
 	int i = 1;
-	while(i < 16 && troncs < MAX_TRONCS-1)
+	while(i < 16 && troncs < MAX_TRONCS-1) //Process Chunks 
 	{
-		currentMatrix = currentMatrix *branches[ input[index + i] ]; 
+		currentMatrix = currentMatrix *branches[ input[index + i] ]; //Update Matrix
 		if( input[index + i] == uint16_t(3) || input[index + i] == uint16_t(4))
 		{
 			currentMatrix = currentMatrix * ScaleMatrix;
