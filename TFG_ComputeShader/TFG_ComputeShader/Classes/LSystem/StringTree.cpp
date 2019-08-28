@@ -100,20 +100,7 @@ void StringTree::GenerateToBuffer(unsigned short * buffer, unsigned short * indi
 	//Store where the axiom finishes
 	indiceBuffer[0] = nextPositionToWrite;
 
-	if (debug)
-	{
-		cerr << "AXIOM PROCESSED: " << endl;
-		cerr << "\t"; 
-		for (int i = 0; i < indiceBuffer[0]; i++)
-		{
-			if (i%Config::MAX_WIDTH == 0)cerr << endl<<endl;
-			if (buffer[i] != 0)
-				cerr << buffer[i] << "  ";
-
-		}
-		cerr << endl;
-	}
-	
+		
 	unsigned int FirstPositionRead; 
 	unsigned int LastPositionRead; 
 	unsigned int currentgeneration = 1; 	// Process Tree (Gen 0 == seed)
@@ -121,25 +108,10 @@ void StringTree::GenerateToBuffer(unsigned short * buffer, unsigned short * indi
 
 	while(correct && currentgeneration < generations)
 	{
-		if (debug) 
-		{
-			cerr << "*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*" << endl;
-			cerr << "PROCESSING GENERATION: " << currentgeneration<<endl;
-		}
+
 		//Process Next Generation
 		correct = ProcessNewGeneration(buffer, indiceBuffer, currentgeneration, dic, debug) > 0;
-		if (debug)
-		{
-			cerr << "GENERATION PROCESSED: " << endl; 
-			cerr << "Start point: " << indiceBuffer[currentgeneration - 1] << " End Point" << indiceBuffer[currentgeneration] << endl; 
-			for (int i = indiceBuffer[currentgeneration-1]; i < indiceBuffer[currentgeneration]; i++)
-			{
-				if (i%Config::MAX_WIDTH == 0)cerr << endl << endl;
-				if(buffer[i]!=0)
-					cerr << buffer[i] << "  ";
-			}
-			cerr << "\n*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*" << endl;
-		}
+
 		currentgeneration++; //Update generation
 	}
 }
@@ -183,7 +155,7 @@ int StringTree::GenerateMultipleToBuffer(unsigned short * Treebuffer, unsigned i
 			}
 			else
 			{
-				cerr << "MAX BUFFER REACHED!!!!!!!!!!!!!!!!!!!!" << endl;
+				cerr << "MAX BUFFER REACHED!" << endl;
 				string s; 
 				cin >> s;
 			}
@@ -202,25 +174,6 @@ int StringTree::GenerateMultipleToBuffer(unsigned short * Treebuffer, unsigned i
 		indiceTreeBuffer[axiomIndex] = WrittingPos;
 	}
 
-	if (debug)
-	{
-		cerr << "/*******************************************/" << endl << "\t\t TREES " << endl << "/*******************************************/";
-		for (int tree = 0; tree < Axioms.size();tree++)
-		{
-			cerr << "Tree Number: " << tree << endl; 
-			int start = (tree < 1) ? 0 : indiceTreeBuffer[tree - 1];
-			int end = indiceTreeBuffer[tree];
-			cerr << start << " " << end << endl;
-			/*for (int item = start; item < end; item++)
-			{
-				if (item%Config::MAX_WIDTH == 0)
-					cerr << endl;
-				cerr << Treebuffer[item] << "  ";
-				
-			}
-			*/cerr << endl;
-		}
-	}
 	
 	//Clean buffers
 	if (auxiliarBuffer) {
@@ -322,12 +275,13 @@ bool StringTree::GenerateNewBranch(unsigned short * buffer, unsigned short * bra
 	
 	*branches+=1;
 	*currentDepth+=1;
-	//cerr << "\t\t\t CREATING NEW BRANCH" << endl; 
-	//cerr << "\t\t\t\t Info: " << endl; 
-	//cerr << "\t\t\t\t num branches: " << *branches << "\t Initial pos Offset" << initalPositionWrite + (*branches-1)*Config::MAX_WIDTH << "\t Max size: " << Config::MAX_BUFFER_SIZE << endl;
+	
 	if (*branches * Config::MAX_WIDTH + initalPositionWrite > Config::MAX_BUFFER_SIZE)//If there isn't enough space
 		return false; 
+	//Write the new depth on the created branch
 	buffer[*branches * Config::MAX_WIDTH + initalPositionWrite] = *currentDepth;
+
+	//Next position to write is 1. (meaning row 'x' column 1 if we see the buffer as a matrix).
 	*currentWritablePos = 1;
 	return true;
 }
@@ -338,32 +292,21 @@ unsigned int StringTree::ProcessNewGeneration(unsigned short * buffer, unsigned 
 	unsigned int num_branches = 0;
 	unsigned int writtingPos = 0, readingPos = 0;
 
-	(currentGeneration < 2) ? readingPos = 0 : readingPos = indiceBuffer[currentGeneration - 2];
+	//Where starts the last generation? 
+	(currentGeneration < 2) ? readingPos = 0 : readingPos = indiceBuffer[currentGeneration - 2]; 
+	//Where should write the new generation
 	writtingPos = indiceBuffer[currentGeneration - 1];
+	//How many branches has the last generation
 	num_branches = (writtingPos - readingPos) / Config::MAX_WIDTH;
 	
-	if (debug)
-	{
-		cerr << "\tGeneration info: " << endl; 
-		cerr << "\t\t Reading Start: " << readingPos << endl; 
-		cerr << "\t\t Writting Start: " << writtingPos << endl;
-		cerr << "\t\t Num Branches: " << num_branches << endl;;
-	}
+	//For all the branches in the last generation
 	for (int i = 0; i < num_branches; i++)
 	{
-		writtingPos = ProcessBranch(buffer, readingPos, writtingPos, _dic, debug);
-		if (writtingPos == 0)
-		{
-			if (debug)
-			{
-				cerr << "ERROR AT PROCESSING BRANCH: " << endl; 
-				cerr << "Generation: " << currentGeneration << "\t Branch Number" << i << endl;
-				return 0;
-			}
-		}
-		readingPos += Config::MAX_WIDTH; 
+		writtingPos = ProcessBranch(buffer, readingPos, writtingPos, _dic, debug); //Process the branch
+		
+		readingPos += Config::MAX_WIDTH; //Read the next branch (apply the branch offset) 
 	}
-	
+	//Store where the new generation has finish to write.
 	indiceBuffer[currentGeneration] = writtingPos;
 	return writtingPos;
 }
@@ -382,19 +325,13 @@ unsigned int StringTree::ProcessBranch(unsigned short * buffer, unsigned int rea
 	unsigned int writtingOffset = writtingBufferPos; // Where we start to write in the buffer
 
 	bool correctBranch = true; //Are the branches ok? 
-	if (debug)
-	{
-		cerr << endl;
-		cerr << "\tInfo about Processing Branch: " << endl; 
-		cerr << "\t\tStart read: " << readingBufferoffset << "\tStart Write" << writtingBufferPos << endl; 
-		cerr << "\t\tInitial Depth" << branchDepth << endl << endl; 
-	}
+
 
 
 	while (index < Config::MAX_WIDTH && buffer[readingBufferoffset + index] != 0)
 	{
 
-		vector<unsigned short> translate = _dic.Replace(buffer[readingBufferoffset + index]); 
+		vector<unsigned short> translate = _dic.Replace(buffer[readingBufferoffset + index]); //Get The translation from origin symbol to it's translate. 
 
 		unsigned short depth = branchDepth;
 
@@ -402,10 +339,6 @@ unsigned int StringTree::ProcessBranch(unsigned short * buffer, unsigned int rea
 		{
 			if (translate[i] == 1)//New Branch
 			{
-				if (debug)
-				{
-					cerr << "\t\tCreating new branch: " << branchCreated << endl;
-				}
 				if (i != 0)
 				{
 					if (GenerateNewBranch(buffer, &branchCreated, &writtingIndex, &depth, writtingOffset))
@@ -444,6 +377,7 @@ unsigned int StringTree::ProcessBranch(unsigned short * buffer, unsigned int rea
 
 	}
 
+	//Memory Check
 	if ((branchCreated + 1) * Config::MAX_WIDTH + writtingOffset >= Config::MAX_BRANCHES * Config::MAX_WIDTH * Config::MAX_GENERATIONS)
 	{
 		cerr << "Error FALTA MEMORIA " << endl; 
