@@ -34,11 +34,11 @@ void main()
 	while(i < 16 && troncs < MAX_TRONCS-1) //Process Chunks 
 	{
 		currentMatrix = currentMatrix *branches[ input[index + i] ]; //Update Matrix
-		if( input[index + i] == uint16_t(3) || input[index + i] == uint16_t(4))
+		if( input[index + i] == uint16_t(3) || input[index + i] == uint16_t(4)) //Forward symbol found == put chunk or wood
 		{
-			currentMatrix = currentMatrix * ScaleMatrix;
-			outs[gl_WorkGroupID.x * MAX_TRONCS + troncs] = currentMatrix;
-			lastMatrix = currentMatrix;
+			currentMatrix = currentMatrix * ScaleMatrix; //Reduce the next trunk, (top of tree is slimer than bottom)
+			outs[gl_WorkGroupID.x * MAX_TRONCS + troncs] = currentMatrix;//Save current matrix for the chunk
+			lastMatrix = currentMatrix; //This is the last matrix founded
 			troncs ++; 
 		}
 		i++;
