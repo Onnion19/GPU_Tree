@@ -82,13 +82,15 @@ We have diferent rows and columns:
 
 
 	So an example may be: 
+	
+	String: XFFAEIOFISFA [ UIFJEINF ] UIEWIF [ EIFIIFE ] SFE ] IOJJFIEUHFEJIFUEHUHFEUY
 
 	1 - BRANCH 0.0		DEPTH: 0 BRANCH: XFFAEIOFISFA[
 	2 - BRANCH 0.1		DEPTH: 1 BRANCH: UIFJEINF]
 	3 - BRANCH 0.2		DEPTH: 1 BRANCH: UIEWIF[
 	4 - BRANCH 0.2.1	DEPTH: 2 BRANCH: EIFIIFE]
-	5 - BRANCH 0.2.1.1	DEPTH: 3 BRANCH: SFE]
-	6 - BRANCH 0.3.0	DEPTH: 1 BRANCH: IOJJFIEUHFEJIFUEHUHFEUY] (HEUFYGBFUE) -->  BRANCH WAS TO LARGE SO " HEUFYGBFUE " WAS IGNORED
+	5 - BRANCH 0.2.2	DEPTH: 2 BRANCH: SFE]
+	6 - BRANCH 0.3.0	DEPTH: 1 BRANCH: IOJJFIEUHFEJIFU (EHUHFEUY) -->  BRANCH WAS TO LARGE SO " EHUHFEUY " WAS IGNORED
 */
 
 
@@ -181,7 +183,7 @@ unsigned int StringTree::ProcessAxiom(unsigned short * buffer, unsigned int init
 			if (currentWritablePos < Config::MAX_WIDTH) // Tenim espai a la branca
 			{
 
-				if (!brancaCorrecte)//Si s'ha tancat una branca prèviament i no se'n ha obert cap -> forcem a crear una nova branca
+				if (!brancaCorrecte)//Si s'ha tancat una branca prÃ¨viament i no se'n ha obert cap -> forcem a crear una nova branca
 				{
 					if (GenerateNewBranch(buffer, &branches, &currentWritablePos, &currentDepth, initalPositionWrite))
 						brancaCorrecte = true; 
