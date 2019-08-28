@@ -24,15 +24,55 @@ using namespace std;
 class renderSystem {
 public:
 	renderSystem();
-	void addElement(Renderizer * , glm::mat4 t = glm::mat4(1.0f)); ///Versio final, acceptara qualsevol tipus de cosa// S'entra el nou model i la seva transformacio
-	void AddTriangle(Triangle t); 
-	void setCamera(glm::mat4 model, glm::mat4 view, glm::mat4 projection);
+	/** Fill the transform buffer
+	*	Given a Transform Matrix buffer it fills the Render Matrix for every mesh.
+	*	\param transforms <vector glm::mat4> Buffer with all the transform stored
+	*	\param chunks <unsigned int> How many transforms should be copied.
+	*/
+	void SetTransformsRenderSystem(vector<glm::mat4> transforms, unsigned int chunks);
+	/** Adds a single element to the Render buffers
+	*	Adds an element to be rendered at every frame 
+	*	\param mesh <Renderizer> mesh to be rendered. Has to implement draw function 
+	*	\param transform <glm::mat4> transform where should it be rendered. By deafualt is Identity Matrix
+	*/
+	void addElement(Renderizer * mesh, glm::mat4 t = glm::mat4(1.0f)); 
+	/*
+	* Rset the default values for the camera settings
+	*/
 	void ResetCamera();
-	void UNIQUERender();//Nome renderitza un cop
-	void RenderTriangle(Triangle * t); //Renderitza el triangle entrat
-	void RenderCube(Cube * c);//renderitza el cub entrat.
+	/*******************RENDER TYPES*********************/
+	/** Renders a bunch of items that shares the same mesh. 
+	*	This function groups a number of models into a root Transform in WorldSpace, This is perfect for tree renderer because multiple models form a tree, which have only one root. 
+	*	The function allows to send data of multiple tree. 
+	*	\param bufferTreeChunk <vector short> How many mesh have each tree. 
+	*	\param RootTransform <vector glm::mat4> Vector with all the roots for each tree. 
+	*/
+	void RenderInstancingCubes(vector<short> bufferTreeChunk, vector<glm::mat4> RootTransform);
+	/** Render Once
+	*	Render the scene once
+	*/
+	void UNIQUERender();
+	/** Render debug triangle
+	*	Function for debug purposees, draws a triangle on the screen. 
+	*	\param t <triangle *> Triangle information to be rendered. 
+	*/
+	void RenderTriangle(Triangle * t); 
+	/** Render debug cube
+	*	Function for debug purposes, draws a cube on the screen 
+	*	\param c <Cube *> Cube infromation to be rendered. 
+	*/
+	void RenderCube(Cube * c);
+	/** Render debug Model
+	*	Function for debug purposes, draws a model on the screen
+	*	\param m <model *> Model information to be rendered.
+	*/
 	void RenderModel(model *m);
-	void RenderLoop(); //Bucle tradicional de render
+	/** Render Loop
+	*	Classical render loop which updates every frane. 
+	*/
+	void RenderLoop();
+
+	//Debug Pruposes
 	void mostrarMatriu(glm::mat4 m)const { mainCamera->mostraMatriu(m); }
 private: 
 	struct camera {
@@ -50,7 +90,7 @@ private:
 			projection = glm::perspective(glm::radians(45.0f), (float)width / (float)height, 0.1f, 100.0f);
 			model = glm::mat4(1.0f);
 			set_view();
-			mostrar();
+			//mostrar();
 			als = 3; 
 			radi = 10;
 			angle = 0;
@@ -62,18 +102,18 @@ private:
 			set_up();
 			up = glm::vec3(0, 1, 0);
 			set_view();
-			mostrar();
+			//mostrar();
 		}
 
 		glm::mat4 model;
 		glm::mat4 view;
 		glm::mat4 projection;
-		void UP() { /*position.y += movement;*/ als += 0.2; }
-		void DOWN() { /*position.y -= movement;*/als -= 0.2;}
-		void LEFT() { /*position.x -= movement;*/angle -= 0.05; }
-		void RIGHT() { /*position.x += movement;*/angle += 0.05; }
-		void ZOOMIN() { /*position.z += movement;*/ radi -= 0.2; }
-		void ZOOMOUT() { /*position.z -= movement; */radi += 0.2; }
+		void UP() { /*position.y += movement;*/ als += 0.5; }
+		void DOWN() { /*position.y -= movement;*/als -= 0.5;}
+		void LEFT() { /*position.x -= movement;*/angle -= 0.1; }
+		void RIGHT() { /*position.x += movement;*/angle += 0.1; }
+		void ZOOMIN() { /*position.z += movement;*/ radi -= 1; }
+		void ZOOMOUT() { /*position.z -= movement; */radi += 1; }
 		void set_view() {view = glm::lookAt(position, direction, up);}
 		void set_up() {	up = glm::cross(direction, right);	}
 		void set_target(glm::vec3 t) {target = t; direction = glm::normalize(target - position);	}
@@ -134,7 +174,7 @@ private:
 		float als; 
 		float angle; 
 	};
-	bool enviadades; //JUst testing things, es pot esborrar
+	bool enviadades; 
 	vector<Triangle> _Telements;
 	vector<Renderizer *> _elements;
 	vector<model *> _models;
@@ -144,8 +184,9 @@ private:
 	GLFWwindow * mainWindow = nullptr;
 	void initGLFW();
 	void setDefaultCamera();
-	void sendUniforms(unsigned int _IDprogram,glm::mat4 transform = glm::mat4(1.0f));
+	void sendUniforms(unsigned int _IDprogram,glm::mat4 transform = glm::mat4(1.0f), glm::mat4 root = glm::mat4(1.0f));
 	void cameraUP();
 	void cameraInput();
 
+	model * _tronc;
 };

@@ -1,8 +1,5 @@
 #pragma once
 
-// Local Headers
-
-
 // System Headers
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
@@ -14,6 +11,8 @@
 #include <iostream>
 #include <string>
 
+
+//This class is a template from Assimp Tutorials, more info at https://learnopengl.com/Model-Loading/Assimp
 
 class modelLoader
 {

@@ -21,14 +21,16 @@ using namespace std;
 
 class Renderizer {
 public: 
-	 virtual bool setBuffers() = 0;
-	 virtual void set_shaders(string vertexShader, string fragmentShader) = 0;
-	 virtual unsigned int get_vShader()const = 0;
-	 virtual unsigned int get_fShader()const = 0;
-	 virtual unsigned int get_program()const = 0;
+	/*Prepare all the buffers for the GPU such as VertexBuffer*/
+	virtual bool setBuffers() = 0;
+	/*Compiles the shaders pointed by their filepath*/
+	virtual void set_shaders(string vertexShader, string fragmentShader) = 0;
+	/*Get vertex Shader GPU ID */
+	virtual unsigned int get_vShader()const = 0;
+	/*Get fragment Shader GPU ID */
+	virtual unsigned int get_fShader()const = 0;
+	/*Get compiled program GPU ID */
+	virtual unsigned int get_program()const = 0;
+	/*Draw function to be displayed at screen*/
 	virtual void draw() = 0;
-
-private: 
-
-
 };

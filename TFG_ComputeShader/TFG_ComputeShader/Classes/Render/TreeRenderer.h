@@ -13,7 +13,7 @@
 
 using namespace std;
 /**
-* Class to render tree. 
+* Class to render CPU tree.
 * A class that wrapp all the models and geometry calculations to render an L-System tree. 
 */
 class TreeRenderer {
@@ -23,6 +23,9 @@ public:
 	* It creates a tree of 1 box as a root. 
 	*/
 	TreeRenderer();
+
+	
+	TreeRenderer(vector<glm::mat4> transforms);
 	/**
 	* Parametric constructor.
 	* Just safe the string as a tree to render. (Caution, tree is not calculated @see render() for more information. 
@@ -106,6 +109,10 @@ private:
 	void initCube();
 	void initModel();
 	void initFlower();
+
+	/*This function converts L-System Data to Matrix data, using the algorithm of tortoise. THIS FUNCTIONS IS FOR CPU CALCULATIONS*/
 	void calculateTransforms();
+
+
 
 };

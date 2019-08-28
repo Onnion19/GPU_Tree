@@ -20,7 +20,6 @@ modelLoader::~modelLoader()
 
 const aiScene * modelLoader::loadObject(const std::string file, bool debug)
 {
-	//scene = importer.ReadFile(file, aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_JoinIdenticalVertices);
 	scene = importer.ReadFile(file,aiProcess_Triangulate);
 	if (scene == nullptr)
 		std::cerr << "EL MODEL NO S'HA CARRGAT CORRECTAMENT" << std::endl;

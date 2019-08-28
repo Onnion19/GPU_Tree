@@ -6,6 +6,11 @@ TreeRenderer::TreeRenderer()
 	init();
 }
 
+TreeRenderer::TreeRenderer(vector<glm::mat4> t)
+{
+
+}
+
 TreeRenderer::TreeRenderer(string tree)
 {
 	_tree = tree; 
@@ -18,7 +23,6 @@ void TreeRenderer::init()
 	initCube();
 	initFlower();
 	initModel();
-	//_render.addElement(_cube);
 	_render.addElement(_tronc);
 }
 
