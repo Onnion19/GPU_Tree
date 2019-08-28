@@ -9,6 +9,6 @@
 wood or "chunks". A group of chunks will form a branch, and a group of branch will form a tree. </p> 
 
 <p> Every Chunks are calculated in BranchSpace Coordinates, meanwhile branches are independant and can be attached in any tree, giving the
-oportunity to perfom some randomess when creation the tree. Nevertheless this version does not apply that random algorithm, it just follows
-the L-System syntax similar as tortoise Algorithm, but taking an advantage of the independece of the branches to perfom paral·lel 
+oportunity to perfom some randomess at the tree-creation stage.<br> 
+Nevertheless this version does not apply that random algorithm, it just follows the L-System syntax similar as tortoise Algorithm, but taking an advantage of the independece of the branches to perfom paral·lel 
 calculations.</p>
