@@ -82,23 +82,22 @@ We have diferent rows and columns:
 
 
 	So an example may be: 
-	
-	String: XFFAEIOFISFA [ UIFJEINF ] UIEWIF [ EIFIIFE ] SFE ] IOJJFIEUHFEJIFUEHUHFEUY
 
 	1 - BRANCH 0.0		DEPTH: 0 BRANCH: XFFAEIOFISFA[
 	2 - BRANCH 0.1		DEPTH: 1 BRANCH: UIFJEINF]
 	3 - BRANCH 0.2		DEPTH: 1 BRANCH: UIEWIF[
 	4 - BRANCH 0.2.1	DEPTH: 2 BRANCH: EIFIIFE]
-	5 - BRANCH 0.2.2	DEPTH: 2 BRANCH: SFE]
-	6 - BRANCH 0.3.0	DEPTH: 1 BRANCH: IOJJFIEUHFEJIFU (EHUHFEUY) -->  BRANCH WAS TO LARGE SO " EHUHFEUY " WAS IGNORED
+	5 - BRANCH 0.2.1.1	DEPTH: 3 BRANCH: SFE]
+	6 - BRANCH 0.3.0	DEPTH: 1 BRANCH: IOJJFIEUHFEJIFUEHUHFEUY] (HEUFYGBFUE) -->  BRANCH WAS TO LARGE SO " HEUFYGBFUE " WAS IGNORED
 */
 
 
 void StringTree::GenerateToBuffer(unsigned short * buffer, unsigned short * indiceBuffer, string Axiom, Dictionary dic, unsigned int generations , bool debug )
 {
 	unsigned int nextPositionToWrite = 0;
-	//Process Axiom 
+	//Process Axiom and get it's memory size
 	nextPositionToWrite = ProcessAxiom(buffer, nextPositionToWrite,1,Axiom,dic);
+	//Store where the axiom finishes
 	indiceBuffer[0] = nextPositionToWrite;
 
 	if (debug)
@@ -117,9 +116,9 @@ void StringTree::GenerateToBuffer(unsigned short * buffer, unsigned short * indi
 	
 	unsigned int FirstPositionRead; 
 	unsigned int LastPositionRead; 
-	unsigned int currentgeneration = 1; 
+	unsigned int currentgeneration = 1; 	// Process Tree (Gen 0 == seed)
 	bool correct = true; 
-	// Process Tree (Gen 0 == seed)
+
 	while(correct && currentgeneration < generations)
 	{
 		if (debug) 
@@ -127,7 +126,7 @@ void StringTree::GenerateToBuffer(unsigned short * buffer, unsigned short * indi
 			cerr << "*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*" << endl;
 			cerr << "PROCESSING GENERATION: " << currentgeneration<<endl;
 		}
-			
+		//Process Next Generation
 		correct = ProcessNewGeneration(buffer, indiceBuffer, currentgeneration, dic, debug) > 0;
 		if (debug)
 		{
@@ -141,11 +140,123 @@ void StringTree::GenerateToBuffer(unsigned short * buffer, unsigned short * indi
 			}
 			cerr << "\n*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*" << endl;
 		}
-		currentgeneration++;
+		currentgeneration++; //Update generation
 	}
 }
 
+int StringTree::GenerateMultipleToBuffer(unsigned short * Treebuffer, unsigned int * indiceTreeBuffer, string filename, Dictionary dic, unsigned int generations, bool debug)
+{
 
+
+	//Generate buffers
+	unsigned short * auxiliarBuffer = new unsigned short[Config::MAX_BRANCHES * Config::MAX_WIDTH * Config::MAX_GENERATIONS]; //Stores all generations of the tree as L-System data
+	unsigned short * indiceBuffer = new unsigned short[Config::MAX_GENERATIONS]; //Stores the position where every generation start in the buffer.
+
+
+	int WrittingPos = 0; //Starting writting pos to 0. In future we may create some offset for header information. 
+	vector<string> Axioms = ReadAxiomsFromFile(filename); //Read all the axioms (tree) that we must process.
+
+	for (int axiomIndex = 0; axiomIndex < Axioms.size(); axiomIndex++)
+	{
+		//Check that buffers are correctly referenced. 
+		if (indiceBuffer == nullptr || auxiliarBuffer == nullptr)
+		{
+			cerr << "NULL PTR DETECTED" << endl;
+			string ax; cin >> ax;
+			throw("");
+		}
+
+		//Generate LSystem to Buffers (just every time smash the content, indiceBuffer is gonna tell us where to stop reading, so no matter the content of the buffer after indicebuffer position)
+		GenerateToBuffer(auxiliarBuffer, indiceBuffer, Axioms[axiomIndex], dic, generations, false);
+		
+		//Check reading position and end position
+		int start = (generations < 2) ? 0 : indiceBuffer[generations - 2];
+		int end = indiceBuffer[generations-1];
+
+		//Start to copy content from auxiliar buffer , to final buffer. Only last generation is copied 
+		for (int i = start; i < end; i++)
+		{
+			if (WrittingPos < Config::MAX_BUFFER_SIZE)
+			{
+				Treebuffer[WrittingPos] = auxiliarBuffer[i];
+				WrittingPos++;
+			}
+			else
+			{
+				cerr << "MAX BUFFER REACHED!!!!!!!!!!!!!!!!!!!!" << endl;
+				string s; 
+				cin >> s;
+			}
+				
+			
+		}
+
+		if (indiceBuffer == nullptr || auxiliarBuffer == nullptr)
+		{
+			cerr << "NULL PTR DETECTED" << endl; 
+			string ax; cin >> ax;
+		}
+
+
+		//Write where this tree ends
+		indiceTreeBuffer[axiomIndex] = WrittingPos;
+	}
+
+	if (debug)
+	{
+		cerr << "/*******************************************/" << endl << "\t\t TREES " << endl << "/*******************************************/";
+		for (int tree = 0; tree < Axioms.size();tree++)
+		{
+			cerr << "Tree Number: " << tree << endl; 
+			int start = (tree < 1) ? 0 : indiceTreeBuffer[tree - 1];
+			int end = indiceTreeBuffer[tree];
+			cerr << start << " " << end << endl;
+			/*for (int item = start; item < end; item++)
+			{
+				if (item%Config::MAX_WIDTH == 0)
+					cerr << endl;
+				cerr << Treebuffer[item] << "  ";
+				
+			}
+			*/cerr << endl;
+		}
+	}
+	
+	//Clean buffers
+	if (auxiliarBuffer) {
+		delete auxiliarBuffer; 
+		auxiliarBuffer = nullptr; 
+	}
+
+	if (indiceBuffer) {
+		delete indiceBuffer;
+		indiceBuffer = nullptr;
+	}
+
+	return Axioms.size();
+}
+
+
+vector<string> StringTree::ReadAxiomsFromFile(string filename)const
+{
+	ifstream fin(filename); 
+	if (fin.fail())
+		throw("Error opening the file of Axioms"); 
+	vector<string> Axioms; 
+	string axiomReaded;
+	fin >> axiomReaded;
+	while (!fin.eof())
+	{
+		//cerr << "Readed Axiom = " << axiomReaded << endl;
+		Axioms.push_back(axiomReaded);
+		fin >> axiomReaded;
+	}
+	return Axioms;	
+}
+
+
+
+/****************************PROCESSING FUNCTIONS***********************************/
 /*
 	AXIOM IS NOT AN STRING, BUT VECTOR OF INT 
 	MAKE HOLE TREE: 
@@ -156,9 +267,10 @@ void StringTree::GenerateToBuffer(unsigned short * buffer, unsigned short * indi
 */
 unsigned int StringTree::ProcessAxiom(unsigned short * buffer, unsigned int initalPositionWrite,unsigned short initalDepth, string Axiom, Dictionary _dic)
 {
-	unsigned short branches = 0;
-	unsigned short currentDepth = initalDepth;
-	unsigned int currentWritablePos = initalPositionWrite;
+	unsigned short branches = 0; // numBranches
+	unsigned short currentDepth = initalDepth;//Usually 1
+	unsigned int currentWritablePos = initalPositionWrite; //Is there any offset?
+	//Store initial depth
 	buffer[currentWritablePos] = currentDepth;
 	currentWritablePos++;
 
@@ -166,31 +278,32 @@ unsigned int StringTree::ProcessAxiom(unsigned short * buffer, unsigned int init
 
 	for (int i = 0; i < Axiom.length(); i++)
 	{
-		if (Axiom[i] == '[') // Nova branca
+		if (Axiom[i] == '[') // New Branch
 		{
 			if (GenerateNewBranch(buffer, &branches, &currentWritablePos, &currentDepth, initalPositionWrite))
 				brancaCorrecte = true;
 			else
-				return 0; //No s'ha pogut crear la nova branca, (posiblement falta espai al buffer)
+				return 0; //Could not create a new branch, probably we run out of space!
 		}
-		else if (Axiom[i] == ']') // Tanquem branca
+		else if (Axiom[i] == ']') // Close Branch
 		{
 			currentDepth-=1;
 			brancaCorrecte = false;
 		}
-		else // Omplim Branca
+		else // Populate Branch
 		{
-			if (currentWritablePos < Config::MAX_WIDTH) // Tenim espai a la branca
+			if (currentWritablePos < Config::MAX_WIDTH) //If there is enough space
 			{
 
-				if (!brancaCorrecte)//Si s'ha tancat una branca prèviament i no se'n ha obert cap -> forcem a crear una nova branca
+				if (!brancaCorrecte)//If there isn't any open branch -> Force to open one
 				{
 					if (GenerateNewBranch(buffer, &branches, &currentWritablePos, &currentDepth, initalPositionWrite))
 						brancaCorrecte = true; 
 					else
-						return 0;//No s'ha pogut crear la nova branca, (posiblement falta espai al buffer)
+						return 0;//Could not create a new branch, probably we run out of space!
 				}
 
+				//Translate char to short
 				unsigned short item = _dic.TranslateCharToShort(Axiom[i]);
 				if (item != 0)
 					buffer[branches * Config::MAX_WIDTH + initalPositionWrite + currentWritablePos] = item;
@@ -209,10 +322,10 @@ bool StringTree::GenerateNewBranch(unsigned short * buffer, unsigned short * bra
 	
 	*branches+=1;
 	*currentDepth+=1;
-	cerr << "\t\t\t CREATING NEW BRANCH" << endl; 
-	cerr << "\t\t\t\t Info: " << endl; 
-	cerr << "\t\t\t\t num branches: " << *branches << "\t Initial pos Offset" << initalPositionWrite + (*branches-1)*Config::MAX_WIDTH << "\t Max size: " << Config::MAX_BUFFER_SIZE << endl;
-	if (*branches * Config::MAX_WIDTH + initalPositionWrite > Config::MAX_BUFFER_SIZE)//Passem el buffer
+	//cerr << "\t\t\t CREATING NEW BRANCH" << endl; 
+	//cerr << "\t\t\t\t Info: " << endl; 
+	//cerr << "\t\t\t\t num branches: " << *branches << "\t Initial pos Offset" << initalPositionWrite + (*branches-1)*Config::MAX_WIDTH << "\t Max size: " << Config::MAX_BUFFER_SIZE << endl;
+	if (*branches * Config::MAX_WIDTH + initalPositionWrite > Config::MAX_BUFFER_SIZE)//If there isn't enough space
 		return false; 
 	buffer[*branches * Config::MAX_WIDTH + initalPositionWrite] = *currentDepth;
 	*currentWritablePos = 1;
@@ -329,6 +442,12 @@ unsigned int StringTree::ProcessBranch(unsigned short * buffer, unsigned int rea
 		index++;
 
 
+	}
+
+	if ((branchCreated + 1) * Config::MAX_WIDTH + writtingOffset >= Config::MAX_BRANCHES * Config::MAX_WIDTH * Config::MAX_GENERATIONS)
+	{
+		cerr << "Error FALTA MEMORIA " << endl; 
+		throw("Error FALTA MEMORIA");
 	}
 
 	return (branchCreated + 1) * Config::MAX_WIDTH + writtingOffset;

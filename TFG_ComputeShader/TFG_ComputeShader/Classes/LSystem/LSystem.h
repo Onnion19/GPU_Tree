@@ -77,6 +77,8 @@ public:
 	\return string Returns the final tree. If it can not be generate that the string should be empty.
 	*/
 	void GenerateTree(unsigned short * buffer, unsigned short * indiceBuffer, unsigned int generations = 1, bool debug = false);
+
+	int GenerateTreesFromFile(unsigned short * buffer, unsigned int * indiceBuffer, string filename, unsigned int generations = 1, bool debug = false);
 	//!Generates a tree and output to a file
 	/*!
 		It generates the tree with the actual parameters. An Axiom, rules and generations must be set before in order to generate a tree;

@@ -12,7 +12,7 @@ LSystem * LSystem::init()
 	}
 
 	_lSystem = new LSystem();
-	cout << "Created an empty LSystem" << endl;
+	//cout << "Created an empty LSystem" << endl;
 
 	return _lSystem;	
 }
@@ -64,6 +64,11 @@ void LSystem::GenerateTree(unsigned short * buffer, unsigned short * indiceBuffe
 	_StringTree.GenerateToBuffer(buffer, indiceBuffer, _Axiom, _Dictionary, generations, debug);
 
 	///Guardar-nos la informació dels troncs --> GPU Pass
+}
+
+int LSystem::GenerateTreesFromFile(unsigned short * buffer, unsigned int * indiceBuffer,string filename, unsigned int generations, bool debug)
+{
+	return _StringTree.GenerateMultipleToBuffer(buffer, indiceBuffer, filename, _Dictionary, generations, debug);
 }
 
 LSystem::~LSystem()

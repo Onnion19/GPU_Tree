@@ -18,7 +18,7 @@ class LSystemMath {
 public: 
 	/**
 	* Matrix Operation Buffer.
-	* Given a dictionary it creates and fill a buffer with all the matrix operation 
+	* Given a dictionary it creates and fill a buffer with all the matrix operation. The order of the operations is the same as the L-System simbols in the dictionary. 
 	*/
 	void GenerateMatrixOperationBuffer(glm::mat4 * buffer, Dictionary dic, bool debug = false) const; 
 	
@@ -28,7 +28,7 @@ public:
 	
 private: 
 
-	const float ROTATION = 0.15f;
+	const float ROTATION = 0.26f;
 	const float SCALE_RATIO = 0.9f;
 	const float TRANSLATE_RTAIO = 1.2f;
 

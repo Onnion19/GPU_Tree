@@ -14,28 +14,28 @@ bool Dictionary::AddRule(char item, string replace)
 	if (!ItemExist(item))
 		return correct; 
 
+	/*Create a new Rule*/
 	rule newRule; 
 		newRule._rule = replace;
 		newRule._branchesInsindeRule = FindNewBranchesOnRule(replace);
 
-
-
+	//Does it already exist?
 	map<char,rule>::iterator iter = _rules.find(item);
-	if (iter == _rules.end())
+
+	if (iter == _rules.end()) //If not 
 	{
-		//String rule
+		/*Create a string rule and insert it*/
 		pair<char, rule> newItem;
 		newItem.first = item; newItem.second = newRule;
 
 		_rules.insert(newItem);
-		cerr << "Rule added: " << item << " --> " << replace <<" --> " << newRule._branchesInsindeRule<< " Branches inside the rule"<<  endl;
 
-		//Numeric rule
+		/*Create a numeric rule and insert it*/
 		numericRule nR; nR._rule = TranslateStringToShort(replace); nR._branchesInsindeRule = newRule._branchesInsindeRule;
 		pair<unsigned short, numericRule> newNumericItem; newNumericItem.first = TranslateCharToShort(item); newNumericItem.second = nR;
 
 		_numericRules.insert(newNumericItem);
-		cerr << "Numeric Rule added: " << endl; 
+
 		PrintNumericRule(newNumericItem.first,nR);
 
 		correct = true;
@@ -85,25 +85,7 @@ vector<unsigned short> Dictionary::TranslateStringToShort(string input, bool deb
 		if(position != -1)
 			translation.push_back(position);
 
-		//Only Debug porpuses code:
-		if (debug)
-		{
-			if (position != -1)	cerr << input[i]<<" --> "<<position << " ";
-			else errors.push_back("The following char has not founded: " + input[i]);
-		}
-		//End of debug
 	}
-
-	if (debug) cerr << endl;
-	if (debug && errors.size())
-	{
-		cerr << "---------------------------------------------" << endl;
-		cerr << "List of errors: " << endl;
-		for (int i = 0; i < errors.size(); i++)
-			cerr << "\t"<<errors[i] << endl;
-		cerr << "---------------------------------------------" << endl;
-	}
-
 
 	return translation;
 }
@@ -112,20 +94,13 @@ vector<unsigned short> Dictionary::TranslateStringToShort(string input, bool deb
 unsigned short Dictionary::TranslateCharToShort(char input, bool debug)const
 {
 	short retorn = ItemPosition(input);
-	if (debug)
-	{
-		if (retorn != -1)	cerr << input << " --> " << retorn << " ";
-		else cerr << "The following char has not founded: " << input << endl;
-	}
-	
-	if (retorn == -1) retorn=0;//0 utilitzat per demarcar error.
-	return retorn;
+
+	return (retorn > -1)?retorn : 0;
 }
 
 
 void Dictionary::ClearRules()
 {
-	cerr << "Clear Rules" << endl;
 	_rules.clear();
 }
 
@@ -133,7 +108,6 @@ void Dictionary::ClearRules()
 void Dictionary::ClearAll()
 {
 	ClearRules();
-	cerr << "Clear Items" << endl;
 	_items.clear();
 }
 
@@ -171,6 +145,7 @@ void Dictionary::PrintAll()const
 
 void Dictionary::InitItems()
 {
+
 	ifstream file; 
 	file.open(symbol_path); 
 	if (file.fail()|| !file.is_open())
@@ -184,9 +159,9 @@ void Dictionary::InitItems()
 	file >> number;
 	while (!file.eof())
 	{
-		cerr << "Symbols readed: " << number << endl;
+		//cerr << "Symbols readed: " << number << endl;
 		file >> item;		
-		cerr << "Read symbol: " << item << endl; 
+		//cerr << "Read symbol: " << item << endl; 
 
 		_items.push_back(item);
 
@@ -194,7 +169,7 @@ void Dictionary::InitItems()
 			file >> number;
 	}
 
-	cout << "Number of items readed: " << _items.size() << endl;
+	//cout << "Number of items readed: " << _items.size() << endl;
 	file.close();
 }
 
