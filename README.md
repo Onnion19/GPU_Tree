@@ -9,6 +9,7 @@
 
 <p> The main goal is not a visual or graphic result but a brand new algorithm that process multiple L-System in parallel computation, which hasn't been done before or atleast, hasn't published. </p>
 
+### Algorithm 
 <p>The base idea consist in divide the tree structre into pieces of wood or "chunks". A group of chunks will form a branch, and a group of branch will form a tree. <br> 
 Every Chunks are calculated in BranchSpace Coordinates, meanwhile branches are independant and can be attached in any tree, giving the
 oportunity to perfom some randomess at the tree-creation stage.<br> 
